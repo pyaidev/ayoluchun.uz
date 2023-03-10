@@ -1,65 +1,48 @@
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from __future__ import annotations
+
 from rest_framework import generics
-from .serializer import BlogSerializer, BlogGetSerializer, CategorySerializer
-from apps.blog.models import Blog, Category
+from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAuthenticated
+
+from .serializer import ContactSerializerGet
+from .serializer import ContactSerializerPost
+from .serializer import NotificationSerializerGet
+from .serializer import NotificationSerializerPost
+from apps.home.models import Contact
+from apps.home.models import Notification
 
 
-class BlogListView(generics.ListAPIView):
-    queryset = Blog.objects.all()
-    serializer_class = BlogSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = BlogGetSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-
-class BlogCreateView(generics.CreateAPIView):
-    queryset = Blog.objects.all()
-    serializer_class = BlogSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-
-class BlogDetailView(generics.UpdateAPIView):
-    queryset = Blog.objects.all()
-    serializer_class = BlogSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
-
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data)
-
-
-class BlogDeleteView(generics.DestroyAPIView):
-    queryset = Blog.objects.all()
-    serializer_class = BlogSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
-
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class CategoryListView(generics.ListAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticated]
+class ContactListView(generics.ListAPIView):
+    queryset = Contact.objects.all()
+    serializer_class = ContactSerializerGet
+    permission_classes = (IsAuthenticated, IsAdminUser)
 
     def get(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = CategorySerializer(queryset, many=True)
-        return Response(serializer.data)
+        return self.list(request, *args, **kwargs)
+
+
+class ContactCreateView(generics.CreateAPIView):
+    queryset = Contact.objects.all()
+    serializer_class = ContactSerializerPost
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+
+class NotificationListView(generics.ListAPIView):
+    queryset = Notification.objects.all()
+    serializer_class = NotificationSerializerGet
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+
+class NotificationCreateView(generics.CreateAPIView):
+    queryset = Notification.objects.all()
+    serializer_class = NotificationSerializerPost
+    permission_classes = (IsAuthenticated, IsAdminUser)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)

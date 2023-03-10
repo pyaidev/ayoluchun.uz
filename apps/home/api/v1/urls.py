@@ -1,10 +1,18 @@
+from __future__ import annotations
+
 from django.urls import path
-from .views import BlogListView, BlogDetailView, BlogCreateView, BlogGetSerializer, BlogDeleteView, CategoryListView
+
+from .views import ContactCreateView
+from .views import ContactListView
+from .views import NotificationCreateView
+from .views import NotificationListView
 
 urlpatterns = [
-    path('blog/', BlogListView.as_view()),
-    path('blog/<int:pk>/', BlogDetailView.as_view()),
-    path('blog/create/', BlogCreateView.as_view()),
-    path('blog/delete/<int:pk>/', BlogDeleteView.as_view()),
-    path('category/', CategoryListView.as_view()),
+    path('notification/', NotificationListView.as_view(), name='notification-list'),
+    path(
+        'notification/create/', NotificationCreateView.as_view(),
+        name='notification-create',
+    ),
+    path('contact/', ContactListView.as_view(), name='contact-list'),
+    path('contact/create/', ContactCreateView.as_view(), name='contact-create'),
 ]

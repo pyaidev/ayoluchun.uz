@@ -1,26 +1,36 @@
+from __future__ import annotations
+
 from rest_framework import serializers
-from apps.blog.models import Blog, Category
+
+from apps.home.models import Contact
+from apps.home.models import Notification
 
 
-class BlogGetSerializer(serializers.ModelSerializer):
+class ContactSerializerGet(serializers.ModelSerializer):
     class Meta:
-        model = Blog
-        fields = ['id', 'title', 'category', 'description', 'views', 'created_at']
+        model = Contact
+        fields = ('id', 'name', 'email',  'message', 'created_at')
 
 
-class BlogSerializer(serializers.ModelSerializer):
+class ContactSerializerPost(serializers.ModelSerializer):
     class Meta:
-        model = Blog
-        fields = ['id', 'title', 'image', 'category', 'description', 'views', 'created_at']
-        extra_kwargs = {
-            'views': {'read_only': True}
-        }
+        model = Contact
+        fields = ('id', 'name', 'email', 'message', 'created_at')
+
+    def create(self, validated_data):
+        return Contact.objects.create(**validated_data)
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class NotificationSerializerGet(serializers.ModelSerializer):
     class Meta:
-        model = Category
-        fields = ['id', 'title', 'slug']
+        model = Notification
+        fields = ('id', 'user', 'title', 'message', 'is_read', 'created_at')
 
 
+class NotificationSerializerPost(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ('id', 'user', 'title', 'message', 'is_read', 'created_at')
 
+    def create(self, validated_data):
+        return Notification.objects.create(**validated_data)

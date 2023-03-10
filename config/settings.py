@@ -1,14 +1,17 @@
-from pathlib import Path
+from __future__ import annotations
+
 import os
 from datetime import timedelta
+from pathlib import Path
+
 from .jazmin import JAZZMIN_SETTINGS
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-wc)ca3##9e7ii5$*%cxw9-@x7*19(5jo=j=f24o2jpgfgj(a1r'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -26,7 +29,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'drf_yasg',
     'rest_framework_simplejwt',
-    'ckeditor'
+    'ckeditor',
 
 ]
 LOCAL_APPS = [
@@ -34,6 +37,7 @@ LOCAL_APPS = [
     'apps.blog',
     'apps.home',
     'apps.courses',
+    'apps.payment',
 ]
 
 INSTALLED_APPS = THIRD_PARTY_APPS + LOCAL_APPS
@@ -75,9 +79,13 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
+    },
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -105,7 +113,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'static'
+    BASE_DIR / 'static',
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
@@ -121,18 +129,18 @@ JAZZMIN_SETTINGS = JAZZMIN_SETTINGS
 auth_list = [
     'rest_framework_simplejwt.authentication.JWTAuthentication',
     'rest_framework.authentication.SessionAuthentication',
-    'rest_framework.authentication.BasicAuthentication'
+    'rest_framework.authentication.BasicAuthentication',
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer'
+        'rest_framework.renderers.BrowsableAPIRenderer',
     ],
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
         'rest_framework.parsers.FormParser',
-        'rest_framework.parsers.MultiPartParser'
+        'rest_framework.parsers.MultiPartParser',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 5,
@@ -145,7 +153,7 @@ REST_FRAMEWORK = {
     # ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
-    ]
+    ],
 }
 
 # SWAGGER SETTINGS
@@ -154,8 +162,8 @@ SWAGGER_SETTINGS = {
         'Bearer': {
             'type': 'apiKey',
             'in': 'header',
-            'name': 'Authorization'
-        }
+            'name': 'Authorization',
+        },
     },
 }
 

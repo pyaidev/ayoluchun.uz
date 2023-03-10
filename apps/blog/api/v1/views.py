@@ -1,65 +1,77 @@
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from __future__ import annotations
+
 from rest_framework import generics
-from .serializer import BlogSerializer, BlogGetSerializer, CategorySerializer
-from apps.blog.models import Blog, Category
+from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAuthenticated
+
+from .serializer import BlogSerializerDelete
+from .serializer import BlogSerializerGet
+from .serializer import BlogSerializerPost
+from .serializer import BlogSerializerPut
+from .serializer import CategorySerializerGet
+from .serializer import CategorySerializerPost
+from apps.blog.models import Blog
+from apps.blog.models import Category
 
 
 class BlogListView(generics.ListAPIView):
     queryset = Blog.objects.all()
-    serializer_class = BlogSerializer
-    permission_classes = [IsAuthenticated]
+    serializer_class = BlogSerializerGet
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = BlogGetSerializer(queryset, many=True)
-        return Response(serializer.data)
+        return self.list(request, *args, **kwargs)
 
 
 class BlogCreateView(generics.CreateAPIView):
     queryset = Blog.objects.all()
-    serializer_class = BlogSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    serializer_class = BlogSerializerPost
+    permission_classes = (IsAuthenticated, IsAdminUser)
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 
-class BlogDetailView(generics.UpdateAPIView):
+class BlogDetailView(generics.RetrieveAPIView):
     queryset = Blog.objects.all()
-    serializer_class = BlogSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    serializer_class = BlogSerializerGet
+    permission_classes = (IsAuthenticated,)
 
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data)
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+
+class BlogUpdateView(generics.UpdateAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializerPut
+    permission_classes = (IsAuthenticated, IsAdminUser)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
 
 
 class BlogDeleteView(generics.DestroyAPIView):
     queryset = Blog.objects.all()
-    serializer_class = BlogSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    serializer_class = BlogSerializerDelete
+    permission_classes = (IsAuthenticated, IsAdminUser)
 
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
 
 class CategoryListView(generics.ListAPIView):
     queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticated]
+    serializer_class = CategorySerializerGet
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = CategorySerializer(queryset, many=True)
-        return Response(serializer.data)
+        return self.list(request, *args, **kwargs)
+
+
+class CategoryCreateView(generics.CreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializerPost
+    permission_classes = (IsAuthenticated, IsAdminUser)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
