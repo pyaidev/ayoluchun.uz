@@ -17,6 +17,8 @@ class ContactListView(generics.ListAPIView):
     serializer_class = ContactSerializerGet
     permission_classes = (IsAuthenticated, IsAdminUser)
 
+
+
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 

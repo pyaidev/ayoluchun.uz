@@ -6,7 +6,9 @@ from ckeditor.fields import RichTextField
 
 from apps.common.models import BaseModel
 from .choices import STATUS_CHOICES
-# Create your models here.
+from mutagen.mp4 import MP4, MP4StreamInfoError
+
+from helpers.utils import get_timer
 
 
 class CourseCategory(BaseModel):
@@ -21,11 +23,14 @@ class Course(BaseModel):
     image = models.ImageField(upload_to='media/course_images')
     description = RichTextField()
     demo_video = models.FileField()
+    author = models.CharField('Muallif', max_length=150)
     price = models.DecimalField(default=0, max_digits=5, decimal_places=2)
     slug = models.SlugField(unique=True, blank=True)
     certificate_image = models.ImageField(null=True)
     category = models.ForeignKey(CourseCategory, on_delete=models.SET_NULL, null=True)
     language = models.CharField(max_length=60)
+    is_discount = models.BooleanField('Chegirma', default=False)
+    discount_price = models.DecimalField('Chegirmadagi narxi', max_digits=12, decimal_places=2, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -35,10 +40,15 @@ class Course(BaseModel):
     def __str__(self):
         return self.title
 
+    class Meta:
+        verbose_name = 'Kurs'
+        verbose_name_plural = 'Kurslar'
+
 
 class CourseLesson(BaseModel):
     title = models.CharField(max_length=70)
     description = RichTextField()
+    order = models.PositiveIntegerField('Tartib nomeri', default=1)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     lesson_status = models.CharField(max_length=40,
                                      choices=STATUS_CHOICES,
@@ -58,7 +68,7 @@ class CourseVideo(BaseModel):
     title = models.CharField(max_length=80)
     video = models.FileField()
     slug = models.SlugField(unique=True, blank=True)
-    time_duration = models.DecimalField(default=1, max_digits=5, decimal_places=2)
+    length = models.DecimalField(default=1, max_digits=100, decimal_places=2, blank=True, null=True)
     is_viewed = models.BooleanField(default=False)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     useful_files = models.FileField(blank=True, null=True, upload_to='media/useful_materials')
@@ -73,6 +83,28 @@ class CourseVideo(BaseModel):
     def __str__(self):
         return self.title
 
+    def get_video_length(self):
+        try:
+            video = MP4(self.file)
+            return video.info.length
+
+        except MP4StreamInfoError:
+            return 0.0
+
+    def get_video_length_time(self):
+        return get_timer(self.length)
+
+    def get_video(self):
+        return self.file.path
+
+    def save(self, *args, **kwargs):
+        self.length = self.get_video_length()
+        print(self.length)
+        print(self.file.path)
+        print(self.get_video_length_time())
+
+        return super().save(*args, **kwargs)
+
 
 class VideoComment(BaseModel):
     author = models.ForeignKey(
@@ -85,7 +117,7 @@ class VideoComment(BaseModel):
     is_reply = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.author.full_name}'s comment"
+        return f"{self.author.name}'s comment"
 
 
 class CourseCompletion(BaseModel):
@@ -93,12 +125,12 @@ class CourseCompletion(BaseModel):
     student = models.ForeignKey(
         get_user_model(),
         on_delete=models.CASCADE,
-                                )
+    )
     ranking = models.PositiveIntegerField(
         validators=[MinValueValidator(0), MaxValueValidator(5)],
         default=None
-                                        )
+    )
     comment = models.CharField(max_length=400)
 
     def __str__(self):
-        return f"{self.student.full_name}"
+        return f"{self.student.name}"

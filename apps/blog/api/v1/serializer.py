@@ -11,7 +11,7 @@ class BlogSerializerGet(serializers.ModelSerializer):
         model = Blog
         fields = (
             'id', 'author', 'position', 'title',
-            'category', 'image', 'description', 'views',
+            'category', 'image', 'description',
         )
 
 
@@ -20,7 +20,7 @@ class BlogSerializerPost(serializers.ModelSerializer):
         model = Blog
         fields = (
             'id', 'author', 'position', 'title',
-            'category', 'image', 'description', 'views',
+            'category', 'image', 'description'
         )
 
     def create(self, validated_data):
@@ -32,7 +32,7 @@ class BlogSerializerPut(serializers.ModelSerializer):
         model = Blog
         fields = (
             'id', 'author', 'position', 'title',
-            'category', 'image', 'description', 'views',
+            'category', 'image', 'description'
         )
 
     def update(self, instance, validated_data):
@@ -41,10 +41,7 @@ class BlogSerializerPut(serializers.ModelSerializer):
         instance.title = validated_data.get('title', instance.title)
         instance.category = validated_data.get('category', instance.category)
         instance.image = validated_data.get('image', instance.image)
-        instance.description = validated_data.get(
-            'description', instance.description,
-        )
-        instance.views = validated_data.get('views', instance.views)
+
         instance.save()
         return instance
 
@@ -54,7 +51,7 @@ class BlogSerializerDelete(serializers.ModelSerializer):
         model = Blog
         fields = (
             'id', 'author', 'position', 'title',
-            'category', 'image', 'description', 'views',
+            'category', 'image', 'description'
         )
 
     def delete(self, instance):

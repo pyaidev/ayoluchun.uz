@@ -25,11 +25,36 @@ class Blog(BaseModel):
     image = models.ImageField(upload_to='blog/', null=True, blank=True)
     description = RichTextField()
     is_published = models.BooleanField(default=True)
-    views = models.IntegerField(default=0)
-
     def __str__(self):
         return self.title
 
     class Meta:
         verbose_name = 'Blog'
         verbose_name_plural = 'Blogs'
+
+
+class BlogView(BaseModel):
+    blog_view = models.ForeignKey(
+        'blog.Blog',
+        verbose_name=("BLogView"),
+        on_delete=models.CASCADE,
+        related_name="blog_views",
+    )
+    user = models.ForeignKey(
+        "accounts.Account",
+        verbose_name=("Foydalanuvchi"),
+        on_delete=models.CASCADE,
+        related_name="user_views",
+        null=True,
+        blank=True,
+    )
+    device_id = models.CharField(
+        verbose_name=("Идентификатор устройства"),
+        max_length=255,
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        verbose_name = "BlogView"
+        verbose_name_plural = "BlogViews"
