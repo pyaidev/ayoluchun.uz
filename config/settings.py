@@ -29,7 +29,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'drf_yasg',
     'rest_framework_simplejwt',
-    'ckeditor',
+    'ckeditor', 
 
 ]
 LOCAL_APPS = [
