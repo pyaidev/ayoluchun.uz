@@ -13,6 +13,7 @@ from helpers.utils import get_timer
 
 class CourseCategory(BaseModel):
     name = models.CharField(max_length=30, unique=True)
+    slug = models.SlugField(unique=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -31,6 +32,7 @@ class Course(BaseModel):
     language = models.CharField(max_length=60)
     is_discount = models.BooleanField('Chegirma', default=False)
     discount_price = models.DecimalField('Chegirmadagi narxi', max_digits=12, decimal_places=2, blank=True, null=True)
+    is_finished = models.BooleanField('Kurs tugadimi', default=False)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -68,9 +70,10 @@ class CourseVideo(BaseModel):
     title = models.CharField(max_length=80)
     video = models.FileField()
     slug = models.SlugField(unique=True, blank=True)
-    length = models.DecimalField(default=1, max_digits=100, decimal_places=2, blank=True, null=True)
+    length = models.DecimalField(default=0, max_digits=100, decimal_places=2, blank=True, null=True,
+                                 help_text='Video uzunligi ozi yozadi yozmasangiz  bo\'ladi')
     is_viewed = models.BooleanField(default=False)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(CourseLesson, on_delete=models.CASCADE)
     useful_files = models.FileField(blank=True, null=True, upload_to='media/useful_materials')
     useful_links = models.URLField(blank=True, null=True)
     useful_images = models.ImageField(upload_to='media/useful_materials', blank=True, null=True)
@@ -85,7 +88,7 @@ class CourseVideo(BaseModel):
 
     def get_video_length(self):
         try:
-            video = MP4(self.file)
+            video = MP4(self.video)
             return video.info.length
 
         except MP4StreamInfoError:
@@ -95,12 +98,12 @@ class CourseVideo(BaseModel):
         return get_timer(self.length)
 
     def get_video(self):
-        return self.file.path
+        return self.video.path
 
     def save(self, *args, **kwargs):
         self.length = self.get_video_length()
         print(self.length)
-        print(self.file.path)
+        print(self.video.path)
         print(self.get_video_length_time())
 
         return super().save(*args, **kwargs)

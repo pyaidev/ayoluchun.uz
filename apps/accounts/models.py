@@ -58,14 +58,6 @@ class Account(AbstractBaseUser, PermissionsMixin, BaseModel):
     email_is_verified = models.BooleanField(
         default=False, verbose_name='Email is verified',
     )
-    # paid_course = models.ManyToManyField(
-    #     'courses.Course', blank=True, related_name='paid_course',
-    #     verbose_name='Paid course',
-    # )
-    # complete_course = models.ManyToManyField(
-    #     'courses.Course', blank=True, related_name='complete_course',
-    #     verbose_name='Complete course',
-    # )
     is_superuser = models.BooleanField(default=False, verbose_name='Superuser')
     is_staff = models.BooleanField(default=False, verbose_name='Admin')
     is_active = models.BooleanField(default=True)
@@ -97,7 +89,7 @@ class Account(AbstractBaseUser, PermissionsMixin, BaseModel):
 
 
 class Purchased_course(BaseModel):
-    """Sotib olingan kurslar"""
+    """Buy courses"""
     user_id = models.ForeignKey(Account, on_delete=models.CASCADE, verbose_name='Foydalanuvchi')
     course_id = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Kurs')
     is_finished = models.BooleanField(default=False)
@@ -205,4 +197,4 @@ class UserProfile(BaseModel):
         verbose_name_plural = 'User profiles'
 
     def __str__(self):
-        return self.user.phone_number
+        return self.user.name
