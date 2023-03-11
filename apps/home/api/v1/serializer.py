@@ -4,6 +4,9 @@ from rest_framework import serializers
 
 from apps.home.models import Contact
 from apps.home.models import Notification
+from apps.home.models import Certificate
+from apps.courses.models import CourseVideo
+from ...certificaty import certificaty
 
 
 class ContactSerializerGet(serializers.ModelSerializer):
@@ -34,3 +37,14 @@ class NotificationSerializerPost(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return Notification.objects.create(**validated_data)
+
+class CertificateSerializerGet(serializers.ModelSerializer):
+    class Meta:
+        model = Certificate
+        fields = ('id', 'user', 'course', 'created_at')
+
+
+
+
+
+

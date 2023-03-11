@@ -4,7 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.text import slugify
 from ckeditor.fields import RichTextField
 
-from apps.common.models import BaseModel
+from helpers.models import BaseModel
 from .choices import STATUS_CHOICES
 from mutagen.mp4 import MP4, MP4StreamInfoError
 
@@ -23,7 +23,7 @@ class Course(BaseModel):
     image = models.ImageField(upload_to='media/course_images')
     description = RichTextField()
     demo_video = models.FileField()
-    author = models.CharField('Muallif', max_length=150)
+    author = models.CharField('Author', max_length=150)
     price = models.DecimalField(default=0, max_digits=5, decimal_places=2)
     slug = models.SlugField(unique=True, blank=True)
     certificate_image = models.ImageField(null=True)
@@ -108,7 +108,7 @@ class CourseVideo(BaseModel):
 
 class VideoComment(BaseModel):
     author = models.ForeignKey(
-        get_user_model(),
+        'accounts.Account',
         on_delete=models.CASCADE,
     )
     video = models.ForeignKey(CourseVideo, on_delete=models.CASCADE)
@@ -123,7 +123,7 @@ class VideoComment(BaseModel):
 class CourseCompletion(BaseModel):
     course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True)
     student = models.ForeignKey(
-        get_user_model(),
+        'accounts.Account',
         on_delete=models.CASCADE,
     )
     ranking = models.PositiveIntegerField(

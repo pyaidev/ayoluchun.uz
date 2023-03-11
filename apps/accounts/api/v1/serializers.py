@@ -7,17 +7,16 @@ from apps.accounts.models import Account, UserProfile
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-    full_name = serializers.CharField(min_length=6, max_length=128, write_only=True)
     password = serializers.CharField(min_length=6, max_length=128, write_only=True)
     password2 = serializers.CharField(min_length=6, max_length=128, write_only=True)
-    phone = serializers.CharField(min_length=9, max_length=13, write_only=True)
+
 
     class Meta:
         model = Account
         fields = ('id',
-                  'key',
-                  'username',
-                  'phone',
+                  'name',
+                  'surname',
+                  'phone_number',
                   'password',
                   'password2',
                   )
@@ -71,7 +70,7 @@ class LoginSerializer(serializers.ModelSerializer):
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ('id', 'username', 'username', 'phone', 'image')
+        fields = ('id', 'username', 'username', 'phone_number', 'image')
         extra_kwargs = {
             'image': {'read_only': True}
         }
@@ -85,7 +84,7 @@ class AccountSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'username',
-            'phone',
+            'phone_number',
             'gender',
             'date_login',
             'date_created',
@@ -99,7 +98,7 @@ class AccountSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ('id', 'username', 'phone')
+        fields = ('id', 'username', 'phone_number')
 
 
 class UserImageUpdateSerializer(serializers.ModelSerializer):
@@ -109,3 +108,4 @@ class UserImageUpdateSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'image': {'read_only': True}
         }
+

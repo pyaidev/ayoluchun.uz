@@ -8,10 +8,11 @@ from django.core.validators import RegexValidator
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from rest_framework_simplejwt.tokens import RefreshToken
+from apps.courses.models import Course
 
 from .choosen import GENDER
 
-from apps.common.models import BaseModel
+from helpers.models import BaseModel
 
 
 class AccountManager(BaseUserManager):
@@ -98,7 +99,7 @@ class Account(AbstractBaseUser, PermissionsMixin, BaseModel):
 class Purchased_course(BaseModel):
     """Sotib olingan kurslar"""
     user_id = models.ForeignKey(Account, on_delete=models.CASCADE, verbose_name='Foydalanuvchi')
-    course_id = models.ForeignKey('courses.Course', on_delete=models.CASCADE, verbose_name='Kurs')
+    course_id = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Kurs')
     is_finished = models.BooleanField(default=False)
 
     def __str__(self):

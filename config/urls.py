@@ -34,9 +34,9 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
 
-    # path('accounts/', include('apps.accounts.api.urls')),
-    # path('blog/', include('apps.blog.api.urls')),
-    # path('home/', include('apps.home.api.urls')),
+    path('accounts/', include('apps.accounts.api.urls')),
+    path('blog/', include('apps.blog.api.urls')),
+    path('main/', include('apps.home.api.urls')),
     # path('courses/', include('apps.courses.api.urls')),
 ]
 

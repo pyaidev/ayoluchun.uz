@@ -1,5 +1,5 @@
 from django.db import models
-from apps.common.models import BaseModel
+from helpers.models import BaseModel
 from ckeditor.fields import RichTextField
 
 
@@ -25,6 +25,7 @@ class Blog(BaseModel):
     image = models.ImageField(upload_to='blog/', null=True, blank=True)
     description = RichTextField()
     is_published = models.BooleanField(default=True)
+
     def __str__(self):
         return self.title
 

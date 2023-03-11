@@ -5,7 +5,7 @@ from django.db import models
 
 from .choosen import PAY_STATUS
 from .choosen import PAY_TYPE
-from apps.common.models import BaseModel
+from helpers.models import BaseModel
 
 
 class Payment(BaseModel):
@@ -29,7 +29,6 @@ class Payment(BaseModel):
         if self.payment_status == 'Failed' and self.payment_type == 'Click':
             raise ValidationError('You can not pay for free course')
 
-        # TODO: check if user has already paid for this course
 
     class Meta:
         verbose_name = 'Payment'

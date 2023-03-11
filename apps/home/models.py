@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from django.db import models
 
-from apps.common.models import BaseModel
+from helpers.models import BaseModel
+
 
 
 class Contact(BaseModel):
@@ -27,6 +28,7 @@ class Notification(BaseModel):
     message = models.TextField()
     is_read = models.BooleanField(default=False)
 
+
     class Meta:
         verbose_name = 'Notification'
         verbose_name_plural = 'Notifications'
@@ -43,7 +45,6 @@ class Certificate(BaseModel):
     course = models.ForeignKey(
         'courses.Course', on_delete=models.CASCADE, related_name='certificates',
     )
-    image = models.ImageField(upload_to='certificates/')
 
     class Meta:
         verbose_name = 'Certificate'
