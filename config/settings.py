@@ -13,7 +13,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -33,11 +33,12 @@ THIRD_PARTY_APPS = [
 
 ]
 LOCAL_APPS = [
-    'apps.accounts',
-    'apps.blog',
-    'apps.home',
-    'apps.courses',
-    'apps.payment',
+    'src.apps.accounts',
+    'src.apps.blog',
+    'src.apps.home',
+    'src.apps.courses',
+    'src.apps.comment',
+    'src.apps.payment',
 ]
 
 INSTALLED_APPS = THIRD_PARTY_APPS + LOCAL_APPS
@@ -141,12 +142,6 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 5,
     'DEFAULT_AUTHENTICATION_CLASSES': auth_list,
-    # [
-    #    https://www.appsloveworld.com › ...
-    # Перевести эту страницу #     'rest_framework_simplejwt.authentication.JWTAuthentication',
-    #     'rest_framework.authentication.SessionAuthentication',
-    #     'rest_framework.authentication.BasicAuthentication'
-    # ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],

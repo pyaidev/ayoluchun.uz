@@ -34,10 +34,13 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
 
-    path('accounts/', include('apps.accounts.api.urls')),
-    path('blog/', include('apps.blog.api.urls')),
-    path('main/', include('apps.home.api.urls')),
-    # path('courses/', include('apps.courses.api.urls')),
+    path('accounts/', include('src.apps.accounts.api.urls')),
+    path('blog/', include('src.apps.blog.api.urls')),
+    path('main/', include('src.apps.home.api.urls')),
+    path('courses/', include('src.apps.courses.api.urls')),
+    path('comment/', include('src.apps.comment.api.urls')),
+    path('payment/', include('src.apps.payment.api.urls')),
+
 ]
 
 
