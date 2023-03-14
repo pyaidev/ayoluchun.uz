@@ -26,6 +26,8 @@ class Payment(BaseModel):
 
     )
 
+
+
     def clean(self):
         if self.pk:
             object = Payment.objects.get(pk=self.pk)

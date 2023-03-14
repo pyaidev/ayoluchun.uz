@@ -2,6 +2,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import generics
+
+from src.apps.accounts.api.v1.permissions import IsOwnUserOrReadOnly
+from src.apps.accounts.models import Purchased_course
+from .permision import IsPurchase
 from .serializer import CourseListSerializer, CourseSingleSerializer, CourseCreateSerializer, CourseLessonsSerializer, \
     LessonVideoListSerializer, VideoSingleSerializer,  CategorySerializer
 from src.apps.courses.models import Course, CourseCategory, CourseVideo, CourseLesson
@@ -110,23 +114,37 @@ class LessonVideoListView(generics.ListAPIView):
 
 class VideoSingleView(generics.RetrieveAPIView):
     queryset = CourseVideo.objects.all()
+
     serializer_class = VideoSingleSerializer
     permission_classes = [IsAuthenticated]
 
+    lookup_field = 'lesson_id'
+
     def get_queryset(self):
 
+
         lesson_id = self.kwargs['lesson_id']
+
+        # print(self.kwargs)
         video_id = self.kwargs['video_id']
         if lesson_id and video_id:
-            queryset = CourseVideo.objects.get(lesson__id=lesson_id, id=video_id)
-        else:
-            queryset = CourseVideo.objects.none()
-        return queryset
+
+            queryset = CourseVideo.objects.get(course_id=lesson_id, id=video_id)
+            print(queryset.course.course.id)
+            print(Purchased_course.objects.filter(user=self.request.user).values_list('course_id', flat=True))
+            if queryset.course.course.id in Purchased_course.objects.filter(user=self.request.user).values_list('course_id', flat=True):
+                return queryset
+            #     queryset = CourseVideo.objects.filter(course_id=lesson_id, id=video_id)
+
+        return CourseVideo.objects.none()
 
     def get(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = VideoSingleSerializer(queryset)
-        return Response(serializer.data)
+        if queryset := self.get_queryset():
+            serializer = VideoSingleSerializer(queryset)
+            return Response(serializer.data)
+        return Response("You are not buy this course")
+
+
 
 
 class CategoryListView(generics.ListAPIView):

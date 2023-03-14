@@ -10,7 +10,6 @@ class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(min_length=6, max_length=128, write_only=True)
     password2 = serializers.CharField(min_length=6, max_length=128, write_only=True)
 
-
     class Meta:
         model = Account
         fields = ('id',
@@ -32,7 +31,6 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         del validated_data['password2']
         return Account.objects.create_user(**validated_data)
-
 
 
 class LoginSerializer(serializers.ModelSerializer):
@@ -67,7 +65,6 @@ class LoginSerializer(serializers.ModelSerializer):
             'tokens': user.tokens
         }
         return data
-
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
@@ -111,4 +108,3 @@ class UserImageUpdateSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'image': {'read_only': True}
         }
-

@@ -22,7 +22,7 @@ from src.apps.blog.models import Category
 class BlogListView(generics.ListAPIView):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializerGet
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
     # def get_queryset(self):
     #     queryset = super().get_queryset().for_user(self.request.user)
@@ -56,12 +56,13 @@ class BlogCreateView(generics.CreateAPIView):
 class BlogDetailView(generics.RetrieveAPIView):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializerGet
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        print(self.request.META.get('HTTP_USER_AGENT', ''))
+        # print(self.request.META.get('HTTP_USER_AGENT', ''))
         queryset = super().get_queryset()
         blog = get_object_or_404(queryset, id=self.kwargs["pk"])
+        print(self.kwargs)
         if self.request.user.is_authenticated:
             blog_view, created = BlogView.objects.update_or_create(
                 blog_view=blog,
@@ -72,6 +73,7 @@ class BlogDetailView(generics.RetrieveAPIView):
                 blog.save()
         elif self.request.META.get('HTTP_USER_AGENT', ''):
             device_id = self.request.META.get('HTTP_USER_AGENT', '')
+            print(device_id)
             blog_view, created = BlogView.objects.update_or_create(
                 blog_view=blog,
                 device_id=device_id,

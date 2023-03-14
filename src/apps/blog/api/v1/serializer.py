@@ -7,11 +7,14 @@ from src.apps.blog.models import Category
 
 
 class BlogSerializerGet(serializers.ModelSerializer):
+    category_title = serializers.SerializerMethodField('get_category_title')
+    def get_category_title(self, obj):
+        return obj.category.title
     class Meta:
         model = Blog
         fields = (
             'id', 'author', 'position', 'title',
-            'category', 'image', 'description', 'views'
+            'category', 'category_title',  'image', 'description', 'views'
         )
 
 
