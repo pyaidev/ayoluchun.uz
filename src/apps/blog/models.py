@@ -24,6 +24,7 @@ class Blog(BaseModel):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='blog/', null=True, blank=True)
     description = RichTextField()
+    views = models.PositiveIntegerField(default=0)
     is_published = models.BooleanField(default=True)
 
     def __str__(self):
@@ -50,7 +51,7 @@ class BlogView(BaseModel):
         blank=True,
     )
     device_id = models.CharField(
-        verbose_name=("Идентификатор устройства"),
+        verbose_name=("Qurilmalar Identifikatori"),
         max_length=255,
         null=True,
         blank=True,

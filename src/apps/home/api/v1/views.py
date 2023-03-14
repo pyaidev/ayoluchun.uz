@@ -12,12 +12,10 @@ from .serializer import NotificationSerializerGet
 from .serializer import NotificationSerializerPost
 from .serializer import CertificateSerializerGet
 
-
 from src.apps.home.models import Contact
 from src.apps.home.models import Notification
 from src.apps.home.models import Certificate
 from ...certificaty import certificaty
-
 
 
 class ContactListView(generics.ListAPIView):
@@ -57,6 +55,7 @@ class NotificationCreateView(generics.CreateAPIView):
         certificaty(name=f'{self.request.user}', course=f'{self.queryset.get(id=self.lookup_field)}')
         return self.create(request, *args, **kwargs)
 
+
 class CertificateCreate(generics.CreateAPIView):
     queryset = Purchased_course.objects.all()
     serializer_class = CertificateSerializerGet
@@ -67,22 +66,22 @@ class CertificateCreate(generics.CreateAPIView):
         course = request.data.get('course')
         print(request.data)
         qs = self.queryset.get(user=user, course=course)
-        if qs.lessons_video_count== qs.viewed_video_count:
-            if len(Certificate.objects.filter(user_id=user.id, course_id=course))==0:
+        if qs.lessons_video_count == qs.viewed_video_count:
+            if len(Certificate.objects.filter(user_id=user.id, course_id=course)) == 0:
                 obj = Certificate.objects.create(user_id=user.id, course_id=course)
                 obj.save()
-                print(user,qs.course)
-                certificaty(str(user),str(qs.course))
+                print(user, qs.course)
+                certificaty(str(user), str(qs.course))
                 serizalizer = self.get_serializer(obj).data
                 return Response(serizalizer)
-            return Response({"message":"Sertifikat mavjud"})
+            return Response({"message": "Sertifikat mavjud"})
         return Response({'Error': "Kurslar to'liq ko'rilmagan!"})
-
 
 
 class CertificateListView(generics.RetrieveAPIView):
     serializer_class = CertificateSerializerGet
     permission_classes = (IsAuthenticated,)
+
     def retrieve(self, request, *args, **kwargs):
         user = request.user
         certificate = Certificate.objects.all()
@@ -94,6 +93,13 @@ class CertificateListView(generics.RetrieveAPIView):
         except Exception as e:
             return Response({'Error': f'{e}'})
 
+class CertificateListView(generics.ListAPIView):
+    queryset = Certificate.objects.all()
+    serializer_class = CertificateSerializerGet
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
 
 class PurchaseUpdate(generics.UpdateAPIView):
     queryset = Purchased_course.objects.all()
@@ -104,7 +110,7 @@ class PurchaseUpdate(generics.UpdateAPIView):
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         print()
-        instance.viewed_video_count+=1
+        instance.viewed_video_count += 1
         instance.save()
         serializer = self.get_serializer(instance, data=request.data, partial=True)
 

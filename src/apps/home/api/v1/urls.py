@@ -7,7 +7,7 @@ from .views import ContactListView
 from .views import NotificationCreateView
 from .views import NotificationListView
 from .views import CertificateListView
-# from .views import CertificateCreateView
+
 
 urlpatterns = [
     path('notification/', NotificationListView.as_view(), name='notification-list'),
@@ -20,6 +20,5 @@ urlpatterns = [
     path('certificate/', CertificateListView.as_view(), name='certificate-view'),
     path('certificate/createe/', CertificateCreate.as_view(), name='certificate-create'),
     path('purchase/<int:pk>/', PurchaseUpdate.as_view(), name='')
-    # path('certificate/create/', CertificateCreateView.as_view(), name='certificate-create'),
 
 ]

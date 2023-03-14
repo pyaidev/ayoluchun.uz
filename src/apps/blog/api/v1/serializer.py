@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from rest_framework import serializers
 
-from src.apps.blog.models import Blog
+from src.apps.blog.models import Blog, BlogView
 from src.apps.blog.models import Category
 
 
@@ -11,7 +11,7 @@ class BlogSerializerGet(serializers.ModelSerializer):
         model = Blog
         fields = (
             'id', 'author', 'position', 'title',
-            'category', 'image', 'description',
+            'category', 'image', 'description', 'views'
         )
 
 
@@ -57,6 +57,13 @@ class BlogSerializerDelete(serializers.ModelSerializer):
     def delete(self, instance):
         instance.delete()
         return instance
+
+class BlogViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlogView
+        fields = (
+            'id', 'blog_view', 'user',
+        )
 
 class CategorySerializerGet(serializers.ModelSerializer):
     class Meta:

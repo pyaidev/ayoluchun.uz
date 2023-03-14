@@ -34,15 +34,16 @@ class RegisterSerializer(serializers.ModelSerializer):
         return Account.objects.create_user(**validated_data)
 
 
+
 class LoginSerializer(serializers.ModelSerializer):
     username = serializers.CharField(max_length=100, required=True)
     password = serializers.CharField(max_length=68, write_only=True)
-    tokens = serializers.SerializerMethodField(read_only=True)
+    tokens = serializers.CharField(read_only=True)
 
-    def get_tokens(self, obj):
-        username = obj.get('username')
-        tokens = Account.objects.get(username=username).tokens
-        return tokens
+    # def get_tokens(self, obj):
+    #     username = obj.get('username')
+    #     tokens = Account.objects.get(username=username).tokens
+    #     return tokens
 
     class Meta:
         model = Account
@@ -63,8 +64,10 @@ class LoginSerializer(serializers.ModelSerializer):
 
         data = {
             'username': user.username,
+            'tokens': user.tokens
         }
         return data
+
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):

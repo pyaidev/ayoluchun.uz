@@ -19,6 +19,8 @@ urlpatterns = [
     path('blog/<int:pk>/update/', BlogUpdateView.as_view(), name='blog-update'),
     path('blog/<int:pk>/delete/', BlogDeleteView.as_view(), name='blog-delete'),
     path('blog/search/<str:query>/', BlogSearchView.as_view(), name='blog-search'),
+    # path('view/', BlogViewListView.as_view(), name='blog-view'),
     path('category/', CategoryListView.as_view(), name='category-list'),
     path('category/create/', CategoryCreateView.as_view(), name='category-create'),
+
 ]
