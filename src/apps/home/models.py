@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from django.db import models
-from src.apps.accounts.models import Purchased_course
 
 from helpers.models import BaseModel
 
@@ -48,10 +47,8 @@ class Certificate(BaseModel):
     certificate_url = models.CharField(max_length=255, null=True, blank=True)
 
     def save(self, *args, **kwargs):
-
         self.certificate_url = f'/home/nurmuhammad/uic/ayoluchun.uz/static/certicats/{self.user}-{self.course.title}.jpg'
         super().save(*args, **kwargs)
-
 
     class Meta:
         verbose_name = 'Certificate'

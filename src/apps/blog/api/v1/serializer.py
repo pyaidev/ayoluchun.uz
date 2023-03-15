@@ -8,13 +8,15 @@ from src.apps.blog.models import Category
 
 class BlogSerializerGet(serializers.ModelSerializer):
     category_title = serializers.SerializerMethodField('get_category_title')
+
     def get_category_title(self, obj):
         return obj.category.title
+
     class Meta:
         model = Blog
         fields = (
             'id', 'author', 'position', 'title',
-            'category', 'category_title',  'image', 'description', 'views'
+            'category', 'category_title', 'image', 'description', 'views'
         )
 
 
@@ -61,6 +63,7 @@ class BlogSerializerDelete(serializers.ModelSerializer):
         instance.delete()
         return instance
 
+
 class BlogViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = BlogView
@@ -68,12 +71,11 @@ class BlogViewSerializer(serializers.ModelSerializer):
             'id', 'blog_view', 'user',
         )
 
+
 class CategorySerializerGet(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ('id', 'title', 'slug')
-
-
 
 
 class CategorySerializerPost(serializers.ModelSerializer):

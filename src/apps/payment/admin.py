@@ -10,6 +10,7 @@ class PaymentAdmin(admin.ModelAdmin):
     list_filter = ('user', 'course', 'amount')
     search_fields = ('user', 'course', 'amount')
 
+
 # Register your models here.
 
 admin.site.register(Payment)
