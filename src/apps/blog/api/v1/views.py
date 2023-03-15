@@ -3,13 +3,10 @@ from __future__ import annotations
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from django.db.models import Q
 from django.shortcuts import get_object_or_404
 
 from .serializer import BlogSerializerDelete
 from .serializer import BlogSerializerGet
-from .serializer import BlogViewSerializer
 from .serializer import BlogSerializerPost
 from .serializer import BlogSerializerPut
 from .serializer import CategorySerializerGet
@@ -39,7 +36,7 @@ class BlogCreateView(generics.CreateAPIView):
 class BlogDetailView(generics.RetrieveAPIView):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializerGet
-    # permission_classes = (IsAuthenticated,)
+
 
     def get_queryset(self):
         # print(self.request.META.get('HTTP_USER_AGENT', ''))

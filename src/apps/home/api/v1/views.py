@@ -64,13 +64,13 @@ class CertificateCreate(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         user = request.user
         course = request.data.get('course')
-        print(request.data)
+        # print(request.data)
         qs = self.queryset.get(user=user, course=course)
         if qs.lessons_video_count == qs.viewed_video_count:
             if len(Certificate.objects.filter(user_id=user.id, course_id=course)) == 0:
                 obj = Certificate.objects.create(user_id=user.id, course_id=course)
                 obj.save()
-                print(user, qs.course)
+                # print(user, qs.course)
                 certificaty(str(user), str(qs.course))
                 serizalizer = self.get_serializer(obj).data
                 return Response(serizalizer)
@@ -92,6 +92,7 @@ class CertificateListView(generics.RetrieveAPIView):
             return Response(serializer)
         except Exception as e:
             return Response({'Error': f'{e}'})
+
 
 class CertificateListView(generics.ListAPIView):
     queryset = Certificate.objects.all()

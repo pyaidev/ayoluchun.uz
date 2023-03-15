@@ -44,7 +44,7 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 
 class Purchased_courseAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user_id', 'course', 'is_finished')
+    list_display = ('id', 'user_id', 'user', 'course', 'is_finished')
     list_filter = ('user_id', 'course', 'is_finished')
     search_fields = ('user_id', 'course',)
 
