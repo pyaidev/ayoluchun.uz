@@ -26,8 +26,6 @@ class Payment(BaseModel):
 
     )
 
-
-
     def clean(self):
         if self.pk:
             object = Payment.objects.get(pk=self.pk)
@@ -46,3 +44,5 @@ class Payment(BaseModel):
 
     def __str__(self):
         return self.user.name
+
+

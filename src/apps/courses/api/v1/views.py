@@ -122,8 +122,8 @@ class VideoSingleView(generics.RetrieveAPIView):
         if lesson_id and video_id:
 
             queryset = CourseVideo.objects.get(course_id=lesson_id, id=video_id)
-            print(queryset.course.course.id)
-            print(Purchased_course.objects.filter(user=self.request.user).values_list('course_id', flat=True))
+            # print(queryset.course.course.id)
+            # print(Purchased_course.objects.filter(user=self.request.user).values_list('course_id', flat=True))
             if queryset.course.course.id in Purchased_course.objects.filter(user=self.request.user).values_list(
                     'course_id', flat=True):
                 return queryset

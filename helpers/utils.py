@@ -15,4 +15,3 @@ def get_timer(length: float, type: str = 'long'):
             return f"{f'0{int(m)}' if m < 10 else m}:{f'0{round(s)}' if s < 10 else round(s)}"
 
 
-
