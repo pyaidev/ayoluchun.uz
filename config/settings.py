@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 from datetime import timedelta
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
 
 from .jazmin import JAZZMIN_SETTINGS
 
@@ -28,6 +29,7 @@ THIRD_PARTY_APPS = [
     'phonenumber_field',
     'rest_framework',
     'drf_yasg',
+    'modeltranslation',
     'rest_framework_simplejwt',
     'ckeditor',
 
@@ -50,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 LOCAL_BASE_URL = 'http://127.0.0.1:8000'
@@ -103,11 +106,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # LANGUAGE_CODE = 'en-us'
 LANGUAGE_CODE = 'en'
 
-LANGUAGES = [
-    ('en', 'English'),
-    ('uz', 'Uzbek'),
-    ('ru', 'Russian'),
-]
+LANGUAGES = (
+    ('en', _('English')),
+    ('ru', _('Russian')),
+    ('uz', _('Uzbek')),
+)
 
 
 TIME_ZONE = 'Asia/Tashkent'

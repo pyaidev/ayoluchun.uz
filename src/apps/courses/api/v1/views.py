@@ -3,12 +3,11 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import generics
 
-from src.apps.accounts.api.v1.permissions import IsOwnUserOrReadOnly
-from src.apps.accounts.models import Purchased_course
-from .permision import IsPurchase
 from .serializer import CourseListSerializer, CourseSingleSerializer, CourseCreateSerializer, CourseLessonsSerializer, \
-    LessonVideoListSerializer, VideoSingleSerializer,  CategorySerializer
+    LessonVideoListSerializer, VideoSingleSerializer, CategorySerializer
+
 from src.apps.courses.models import Course, CourseCategory, CourseVideo, CourseLesson
+from src.apps.accounts.models import Purchased_course
 
 
 class CourseListView(generics.ListAPIView):
@@ -28,9 +27,6 @@ class CourseListByCategoryView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        """
-        This view should return a list of all the lessons for the course as determined by the course slug.
-        """
         category_id = self.kwargs['id']
         if category_id:
             queryset = Course.objects.filter(category__id=category_id)
@@ -69,9 +65,6 @@ class CourseCreateView(generics.CreateAPIView):
 
 
 class CourseLessonsView(generics.ListAPIView):
-    """
-    This view will return all the lessons for a particular course
-    """
     serializer_class = CourseLessonsSerializer
     permission_classes = [IsAuthenticated]
 
@@ -122,7 +115,6 @@ class VideoSingleView(generics.RetrieveAPIView):
 
     def get_queryset(self):
 
-
         lesson_id = self.kwargs['lesson_id']
 
         # print(self.kwargs)
@@ -132,7 +124,8 @@ class VideoSingleView(generics.RetrieveAPIView):
             queryset = CourseVideo.objects.get(course_id=lesson_id, id=video_id)
             print(queryset.course.course.id)
             print(Purchased_course.objects.filter(user=self.request.user).values_list('course_id', flat=True))
-            if queryset.course.course.id in Purchased_course.objects.filter(user=self.request.user).values_list('course_id', flat=True):
+            if queryset.course.course.id in Purchased_course.objects.filter(user=self.request.user).values_list(
+                    'course_id', flat=True):
                 return queryset
             #     queryset = CourseVideo.objects.filter(course_id=lesson_id, id=video_id)
 
@@ -143,8 +136,6 @@ class VideoSingleView(generics.RetrieveAPIView):
             serializer = VideoSingleSerializer(queryset)
             return Response(serializer.data)
         return Response("You are not buy this course")
-
-
 
 
 class CategoryListView(generics.ListAPIView):

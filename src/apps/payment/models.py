@@ -22,7 +22,7 @@ class Payment(BaseModel):
         max_length=255, choices=PAY_TYPE, verbose_name='Payment Type',
     )
     payment_status = models.CharField(
-        max_length=255, choices=PAY_STATUS, verbose_name='Payment Status',
+        max_length=255, choices=PAY_STATUS, verbose_name='Payment Status'
 
     )
 
