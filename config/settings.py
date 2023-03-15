@@ -29,7 +29,7 @@ THIRD_PARTY_APPS = [
     'phonenumber_field',
     'rest_framework',
     'drf_yasg',
-    'modeltranslation',
+#     'modeltranslation',
     'rest_framework_simplejwt',
     'ckeditor',
 
